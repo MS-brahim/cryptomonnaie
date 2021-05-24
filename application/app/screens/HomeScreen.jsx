@@ -1,53 +1,23 @@
-import React from 'react';
-import { FlatList, ActivityIndicator, Text, View } from 'react-native';
+import React, { Component } from 'react';
+import { ScrollView } from 'react-native';
+import { Header } from 'react-native-elements';
+import Icon from 'react-native-vector-icons/FontAwesome';
 
-export default class HomeScreen extends React.Component {
-  constructor(props) {
-    super(props);
-    this.state = { isLoading: true };
-  }
-
-  componentDidMount() {
-    return fetch('api.coincap.io/v2/assets')
-      .then(response => 
-      response.json()
-      // console.log(response)
-      )
-      .then(responseJson => {
-        this.setState(
-          {
-            isLoading: false,
-            dataSource: responseJson.data,
-          },
-        );
-      })
-      .catch(error => {
-        console.error(error);
-      });
-  }
-
+import axios from 'axios'
+import Item from '../components/ItemComponent'
+export default class HomeScreen extends Component {
+ 
   render() {
-    if (this.state.isLoading) {
-      return (
-        <View style={{ flex: 1, padding: 20 }}>
-          <ActivityIndicator />
-        </View>
-      );
-    }
-
     return (
-      <View style={{ flex: 1, paddingTop: 20 }}>
-        <FlatList
-          data={this.state.dataSource}
-          renderItem={({ item }) => (
-            <Text>
-              {/* {item.title}, {item.releaseYear} */}
-             { console.log(dataSource)}
-            </Text>
-          )}
-          keyExtractor={({ id }, index) => id}
+      <ScrollView>
+        <Header
+          leftComponent={{ icon: 'menu', color: '#fff' }}
+          centerComponent={{ text: 'Home', style: { color: '#fff' } }}
+          rightComponent={{ icon: 'home', color: '#fff' }}
+          backgroundColor= 'orange'
         />
-      </View>
+        <Item/>
+      </ScrollView>
     );
   }
-}
+};

@@ -9,8 +9,8 @@ const styles = StyleSheet.create({
     bgHead : {
         height:100,
         width:'100%',
-        backgroundColor: 'white',
-        position: 'absolute',
-        top:0,
+        backgroundColor: 'orange',
+        borderBottomLeftRadius:40,
+        borderBottomRightRadius:40
     }
 });

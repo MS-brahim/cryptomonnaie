@@ -7,7 +7,7 @@ const ButtonShared = (props) => {
           style={styles.button}
           onPress={props.onPress}
           >
-          <Text style={{color:'white',fontSize:16}}>{props.text}</Text>
+          <Text style={{color:'#fff',fontSize:16}}>{props.text}</Text>
         </TouchableOpacity>
       </View>
     )
@@ -17,10 +17,12 @@ export default ButtonShared
 
 const styles = StyleSheet.create({
     button: {
-      backgroundColor: "#E4A718",
+      backgroundColor: "orange",
       padding: 10,
-      marginTop: 25,
-      borderRadius: 30,
+      margin: 'auto',
+      borderRadius: 10,
       alignItems: 'center',
+      width:140,
+      marginTop:20,
     }
 });

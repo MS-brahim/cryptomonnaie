@@ -4,23 +4,21 @@ import Icon from 'react-native-vector-icons/FontAwesome';
  
 const styles = StyleSheet.create({
     SocialBtn: {
-        padding: 10,
-        marginTop: 20,
-        borderRadius: 20,
+        marginHorizontal:10,
+        borderRadius: 22,
         alignItems: 'center',
         justifyContent: 'center',
-        width: '100%',
-        flexDirection :'row'
+        width: 44,
+        height:44,
     }
 });
  
-const SocialButton = ({title, btnType, color, backgroundColor}) => {
+const SocialButton = ({ btnType, backgroundColor}) => {
     return (
         <TouchableOpacity style={[styles.SocialBtn, {backgroundColor}]}>
             <View>
-                <Icon style={{margin:10}} name={btnType} size={22} color={color}></Icon>
+                <Icon name={btnType} size={30} color='white'></Icon>
             </View>
-            <Text>{title}</Text>
         </TouchableOpacity>
     );
 }

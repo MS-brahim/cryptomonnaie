@@ -4,72 +4,92 @@ import {
     Text,
     StyleSheet,
     ScrollView,
-    TextInput,
-    Image
+    Alert,
 } from "react-native";
 
-import ButtonShared from "../../components/shared/ButtonShared";
 import NavWarinigShared from "../../components/shared/NavWarningShared";
 import SocialButton from "../../components/SocialButtonComponent";
+import Input from "../../components/shared/InputShared";
+import ButtonShared from "../../components/shared/ButtonShared";
+
+import firebase from '../../../Config'
 
 const styles = StyleSheet.create({
     container: {
-        backgroundColor: 'orange',
+        backgroundColor: '#fff',
+        flex:1,
     },
-    cardSign:{
-        borderRadius:25,
-        backgroundColor: '#eef0f25c',
-        padding:30,
-        marginLeft:30,
-        marginRight:30,
-        marginTop:130
-    },
-    input: {
-        height: 40,
-        padding:8,
-        borderBottomWidth:0.7,
-        borderColor:'white',
-        marginTop:20,
-    },
-    lineOu : {
-        color: 'white',
-        textAlign: 'center',
-        margin: 10,
-
-    }
 });
 
-const SignIn = () => {
-    const [fname, onChangeFname] = React.useState("");
+const SignIn = (props) => {
 
-    function signIn() {
-        console.log(fname);
+    const [email, setEmail] = React.useState("")
+    const [password, setPassword] = React.useState("")
+
+    function onLoginPressed  () {
+        try {
+            if (email=='') {
+                Alert('email empty');
+            } else if(password==''){
+                Alert('password empty');
+            } else {
+                firebase.auth().signInWithEmailAndPassword(email, password).then(res=>{
+                    console.log(res);
+                    props.navigation.navigate('Home')
+                })
+            }
+        } catch (err) {
+            console.log(err.message);
+        }
+    }
+
+    function navigateToSignUp() {
+        props.navigation.navigate('signUp')
     }
 
     return (
-        <ScrollView style={styles.container}>
+        <View style={styles.container}>
             <NavWarinigShared/>
-            <View style={styles.cardSign} >
-                <SocialButton 
-                    title='Se Connecter avec GitHub'
-                    btnType='github'
-                    backgroundColor="white"
-                    color="black"
+            <ScrollView style={{margin:30, zIndex:1}}>
+                <Input
+                    placeholder='E-mail...'
+                    secureTextEntry={false}
+                    onChangeText={setEmail}
                 />
-                <SocialButton 
-                    title='Se Connecter avec Facebook'
-                    btnType='facebook'
-                    backgroundColor="white"
-                    color="#3b5999"
+                <Input
+                    placeholder='Password'
+                    secureTextEntry={true}
+                    onChangeText={setPassword}
                 />
-                <SocialButton 
-                    title='Se Connecter avec Twitter'
-                    btnType='twitter'
-                    backgroundColor="white"
-                    color="#55acee"
-                />
-            </View>
-        </ScrollView>
+                <ButtonShared text='Connection' onPress={()=>{onLoginPressed()}}/>
+                <Text style={{color:'orange',alignSelf:'center', marginVertical:15, fontSize:16}}>Or Sign in with</Text>
+                <View style={{flexDirection:'row', justifyContent:'center'}}>
+                    <SocialButton 
+                        title='Se Connecter avec GitHub'
+                        btnType='github'
+                        backgroundColor="black"
+                    />
+                    <SocialButton 
+                        title='Se Connecter avec Facebook'
+                        btnType='facebook'
+                        backgroundColor="#3b5999"
+                        onPress={() => onFacebookButtonPress().then(() => console.log('Signed in with Facebook!'))}
+
+                    />
+                    <SocialButton 
+                        title='Se Connecter avec Twitter'
+                        btnType='twitter'
+                        backgroundColor="#55acee"
+                    />
+                </View>
+                    <View style={{ alignItems:'center', marginVertical:20}}>
+                        <Text style={{fontSize:15}}>Don't have an account ?</Text>
+                        <Text style={{color:'orange', fontSize:16,}}
+                            onPress={()=>navigateToSignUp()}
+                        >Create account </Text>
+                    </View>
+            </ScrollView>
+        </View>
     );
 }
 
