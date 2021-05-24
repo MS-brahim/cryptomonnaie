@@ -32,14 +32,6 @@ const App = () => {
           name="Home"
           component={HomeScreen}
           options={{
-            // title: "Home",
-            // headerTintColor: "#ed3b45",
-            // headerStyle: {
-            //   backgroundColor: "white",
-            // },
-            // headerTitleStyle: {
-            //   fontWeight: 'bold',
-            // },
             headerShown: false
           }}
         />
@@ -47,15 +39,15 @@ const App = () => {
           name="Detail"
           component={DetailScreen}
           options={{
-            // title: "Home",
-            // headerTintColor: "#ed3b45",
-            // headerStyle: {
-            //   backgroundColor: "white",
-            // },
-            // headerTitleStyle: {
-            //   fontWeight: 'bold',
-            // },
-            headerShown: false
+            title: "Coin Detail ",
+            headerTintColor: "#fff",
+            headerStyle: {
+              backgroundColor: "orange",
+            },
+            headerTitleStyle: {
+              fontWeight: 'bold',
+            },
+            headerShown: true
           }}
         />
       </Stack.Navigator>
