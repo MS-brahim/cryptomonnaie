@@ -1,8 +1,9 @@
 import React, { Component } from 'react';
-import { View, Text, StyleSheet } from 'react-native';
+import { View, Text, StyleSheet, Image } from 'react-native';
 import { Avatar, ListItem } from 'react-native-elements';
-
 import axios from 'axios'
+
+import Chart from '../components/ChartComponent'
 
 const styles = StyleSheet.create({
     container: {
@@ -45,13 +46,13 @@ class DetailScreen extends Component {
 
         return (
             <View style={styles.container}>
-                <ListItem style={{shadowColor: 'black',shadowOffset: {width: 0, height: 1},shadowOpacity: 0.2,elevation: 1}}>
-                    {/* <Avatar source={{uri: `https://assets.coincap.io/assets/icons/${dataID.symbol.toLowerCase()}@2x.png`}} /> */}
+                {/* <ListItem>
+                    <Image source={{uri: `https://assets.coincap.io/assets/icons/${dataID.symbol}@2x.png`}} style={{width:100, height:100}} />
         
-                </ListItem>
+                </ListItem> */}
                 <View >
                     <View style={{flexDirection:'row'}}>
-                        <Avatar source={{uri: `https://assets.coincap.io/assets/icons/${dataID.symbol}@2x.png`}} />
+                        {/* <Image source={{uri: `https://assets.coincap.io/assets/icons/${dataID.symbol.toLowerCase()}@2x.png`}} style={{width:100, height:100}}/> */}
                         <View style={{marginHorizontal:30}}>
                             <ListItem.Title style={{fontWeight:'bold'}}>{dataID.name}({dataID.symbol})</ListItem.Title>
                             <Text >{((new Date().getDate() > 9) ? new Date().getDate() : ('0' + new Date().getDate())) + ' ' +((new Date().getMonth() > 8) ? (new Date().getMonth() + 1) : ('0' + (new Date().getMonth() + 1))) + ' ' + new Date().getFullYear()}</Text>
@@ -66,7 +67,7 @@ class DetailScreen extends Component {
                                 LOW <ListItem.Title> ${ Number.parseFloat(dataID.priceUsd).toFixed(2).toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")}</ListItem.Title>
                             </ListItem.Subtitle>                     
                         </View>
-                        <View >
+                        <View>
                             <ListItem.Subtitle>
                                 AVERAGE <ListItem.Title> ${ Number.parseFloat(dataID.priceUsd).toFixed(2).toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")}</ListItem.Title>
                             </ListItem.Subtitle> 
@@ -83,6 +84,7 @@ class DetailScreen extends Component {
                         </View>
                     </View>
                 </View>
+                <Chart/>
             </View>
         );
     }
