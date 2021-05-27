@@ -1,9 +1,8 @@
 import React, { Component } from 'react';
-import { View, Text, StyleSheet, Image } from 'react-native';
+import { View, Text, StyleSheet, Image, Dimensions } from 'react-native';
 import { Avatar, ListItem } from 'react-native-elements';
+import { LineChart } from 'react-native-chart-kit';
 import axios from 'axios'
-
-import Chart from '../components/ChartComponent'
 
 const styles = StyleSheet.create({
     container: {
@@ -18,21 +17,49 @@ class DetailScreen extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            // itemID:this.props.route.params.itemID,
+            itemID:this.props.route.params.itemID,
             dataID: [],
             isLoading: false,
+            times:[0],
+            price:[0],
         };
     }
     
     componentDidMount() {
         this.getCoinByID();
+        this.asyncChartData();
     }
+
+    timeToDay (timestamp) {
+                      
+        var a = new Date(timestamp);
+        var days = ['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday'];    
+        return days[a.getDay()]
+    };
+
+    async asyncChartData () {
+        try {
+            const response = await axios.get(
+                `https://api.coincap.io/v2/assets/${this.state.itemID}/history?interval=d1`,
+            ); 
+    
+            const priceUsdArray = await response.data.data.map(item => item.priceUsd);
+            const dateArray  = await response.data.data.map(item => this.timeToDay(item.time));
+
+            this.setState({
+                price:priceUsdArray.slice(-6),
+                times:dateArray.slice(-6)
+            })
+    
+        } catch (error) {
+            console.log(error.message);
+        }
+    };
     
     async getCoinByID() {
         try {
-            // const response = await axios.get('https://api.coincap.io/v2/assets/'+this.state.itemID)
-            const response = await axios.get('https://api.coincap.io/v2/assets/bitcoin')
-            console.log(response.data.data);
+            const response = await axios.get('https://api.coincap.io/v2/assets/'+this.state.itemID)
+            // const response = await axios.get('https://api.coincap.io/v2/assets/bitcoin')
             this.setState({dataID:response.data.data})
         } catch (error) {
             console.error(error);
@@ -42,8 +69,8 @@ class DetailScreen extends Component {
 
     render() { 
 
-        const {dataID} = this.state
-
+        const {dataID, times, price} = this.state
+        // console.log(dataID.symbol.toLowerCase().indexOf(keyword));
         return (
             <View style={styles.container}>
                 {/* <ListItem>
@@ -84,7 +111,36 @@ class DetailScreen extends Component {
                         </View>
                     </View>
                 </View>
-                <Chart/>
+                {/* <Chart/> */}
+
+                <LineChart
+                    data={{
+                        labels: times,
+                        datasets: [{
+                            data: price
+                        }],
+                    }}
+                    verticalLabelRotation={110}
+                    width={Dimensions.get('window').width} // from react-native
+                    height={220}
+                    yAxisLabel={'$'}
+                    chartConfig={{
+                        backgroundColor: '#e26a00',
+                        backgroundGradientFrom: '#fb8c00',
+                        backgroundGradientTo: '#ffa726',
+                        decimalPlaces: 2, // optional, defaults to 2dp
+                        color: (opacity = 1) => `rgba(0, 0, 0, ${opacity})`,
+                        style: {
+                            borderRadius: 16,
+                        }
+                    }}
+                    bezier
+                    style={{
+                        marginVertical: 8,
+                        borderRadius: 16,
+                        marginRight:20,
+                    }}
+                />
             </View>
         );
     }
