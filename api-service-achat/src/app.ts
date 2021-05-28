@@ -3,12 +3,13 @@ const app = express();
 import db from './config/db';
 import userRouter from './routers/UsersRouter';
 import walletRouter from './routers/WalletRouter';
-
+import cors from 'cors'
 // app.get('/', (req:any, res:any, next:any) => {
 //     res.json('Hello world')
 // })
 
 app.use(express.json());
+app.use(cors());
 
 app.use('/api/v1/user', userRouter)
 app.use('/api/v1/wallet', walletRouter)

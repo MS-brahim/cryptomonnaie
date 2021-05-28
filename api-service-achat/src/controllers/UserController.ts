@@ -26,55 +26,15 @@ class UserController {
 			return res.json({ msg: 'fail to read', status: 500, route: '/read' });
 		}
 	}
-	// async readByID(req: Request, res: Response) {
-	// 	try {
-	// 		const { id } = req.params;
-	// 		const record = await TodoInstance.findOne({ where: { id } });
-	// 		return res.json(record);
-	// 	} catch (e) {
-	// 		return res.json({ msg: 'fail to read', status: 500, route: '/read/:id' });
-	// 	}
-	// }
-	// async update(req: Request, res: Response) {
-	// 	try {
-	// 		const { id } = req.params;
-	// 		const record = await TodoInstance.findOne({ where: { id } });
-
-	// 		if (!record) {
-	// 			return res.json({ msg: 'Can not find existing record' });
-	// 		}
-
-	// 		const updatedRecord = await record.update({
-	// 			completed: !record.getDataValue('completed'),
-	// 		});
-	// 		return res.json({ record: updatedRecord });
-	// 	} catch (e) {
-	// 		return res.json({
-	// 			msg: 'fail to read',
-	// 			status: 500,
-	// 			route: '/update/:id',
-	// 		});
-	// 	}
-	// }
-	// async delete(req: Request, res: Response) {
-	// 	try {
-	// 		const { id } = req.params;
-	// 		const record = await TodoInstance.findOne({ where: { id } });
-
-	// 		if (!record) {
-	// 			return res.json({ msg: 'Can not find existing record' });
-	// 		}
-
-	// 		const deletedRecord = await record.destroy();
-	// 		return res.json({ record: deletedRecord });
-	// 	} catch (e) {
-	// 		return res.json({
-	// 			msg: 'fail to read',
-	// 			status: 500,
-	// 			route: '/delete/:id',
-	// 		});
-	// 	}
-	// }
+	async findUserById(req: Request, res: Response) {
+		try {
+			const { id } = req.params;
+			const record = await UserI.findOne({ where: { id } });
+			return res.json(record);
+		} catch (e) {
+			return res.json({ msg: 'fail to read', status: 500, route: '/read/:id' });
+		}
+	}
 }
 
 export default new UserController();

@@ -1,8 +1,10 @@
 import React, { Component } from 'react';
-import { View, Text, StyleSheet, Image, Dimensions } from 'react-native';
-import { Avatar, ListItem } from 'react-native-elements';
+import { View, Text, StyleSheet, Image, Dimensions , TextInput} from 'react-native';
+import { ListItem } from 'react-native-elements';
 import { LineChart } from 'react-native-chart-kit';
 import axios from 'axios'
+import ButtonShared from '../components/shared/ButtonShared';
+import Input from '../components/shared/InputShared';
 
 const styles = StyleSheet.create({
     container: {
@@ -22,6 +24,7 @@ class DetailScreen extends Component {
             isLoading: false,
             times:[0],
             price:[0],
+            value:'',
         };
     }
     
@@ -67,19 +70,34 @@ class DetailScreen extends Component {
         }
     }
 
+    handleInputChange = (inputName, inputValue) => {
+        this.setState(state => ({ 
+          ...state,
+          [inputName]: inputValue // <-- Put square brackets
+        }))
+    }
+
+    buyCoinCap(){
+        // console.log('ok');
+        const {value, dataID} = this.state
+        // console.log(value);
+        axios.post('http://localhost:4000/api/v1/wallet/create',{
+            coin_name:dataID.name,
+            value:value
+        }).then((response)=>{
+            console.log(response.data);
+        })
+    }
+
     render() { 
 
-        const {dataID, times, price} = this.state
-        // console.log(dataID.symbol.toLowerCase().indexOf(keyword));
+        const {dataID, times, price, value} = this.state
+
         return (
             <View style={styles.container}>
-                {/* <ListItem>
-                    <Image source={{uri: `https://assets.coincap.io/assets/icons/${dataID.symbol}@2x.png`}} style={{width:100, height:100}} />
-        
-                </ListItem> */}
                 <View >
                     <View style={{flexDirection:'row'}}>
-                        {/* <Image source={{uri: `https://assets.coincap.io/assets/icons/${dataID.symbol.toLowerCase()}@2x.png`}} style={{width:100, height:100}}/> */}
+                        <Image source={{uri: `https://assets.coincap.io/assets/icons/${dataID.symbol}@2x.png`}} style={{width:100, height:100}}/>
                         <View style={{marginHorizontal:30}}>
                             <ListItem.Title style={{fontWeight:'bold'}}>{dataID.name}({dataID.symbol})</ListItem.Title>
                             <Text >{((new Date().getDate() > 9) ? new Date().getDate() : ('0' + new Date().getDate())) + ' ' +((new Date().getMonth() > 8) ? (new Date().getMonth() + 1) : ('0' + (new Date().getMonth() + 1))) + ' ' + new Date().getFullYear()}</Text>
@@ -111,7 +129,6 @@ class DetailScreen extends Component {
                         </View>
                     </View>
                 </View>
-                {/* <Chart/> */}
 
                 <LineChart
                     data={{
@@ -141,6 +158,11 @@ class DetailScreen extends Component {
                         marginRight:20,
                     }}
                 />
+                <TextInput
+                    value={value}
+                    onChangeText={value => this.handleInputChange('value', value)}
+                />
+                <ButtonShared text='Buy now' onPress={()=> this.buyCoinCap()}/>
             </View>
         );
     }

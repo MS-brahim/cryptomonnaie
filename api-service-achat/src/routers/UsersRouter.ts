@@ -13,25 +13,9 @@ router.get(
     UserController.findAllUsers
 );
 
-// router.get(
-// 	'/read/:id',
-// 	TodoValidator.checkIdParam(),
-// 	Middleware.handleValidationError,
-// 	TodoController.readByID
-// );
-
-// router.put(
-// 	'/update/:id',
-// 	TodoValidator.checkIdParam(),
-// 	Middleware.handleValidationError,
-// 	TodoController.update
-// );
-
-// router.delete(
-// 	'/delete/:id',
-// 	TodoValidator.checkIdParam(),
-// 	Middleware.handleValidationError,
-// 	TodoController.delete
-// );
+router.get(
+	'/read/:id',
+	UserController.findUserById
+);
 
 export default router;
