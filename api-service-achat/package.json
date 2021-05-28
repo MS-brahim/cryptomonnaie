@@ -1,0 +1,21 @@
+{
+  "name": "api-service-achat",
+  "version": "1.0.0",
+  "main": "index.js",
+  "license": "MIT",
+  "scripts": {
+    "start": "nodemon src/app.ts"
+  },
+  "dependencies": {
+    "@types/express": "^4.17.12",
+    "@types/uuid": "^8.3.0",
+    "express": "^4.17.1",
+    "nodemon": "^2.0.7",
+    "pg": "^8.6.0",
+    "sequelize": "^6.6.2",
+    "sequelize-typescript": "^2.1.0",
+    "ts-node": "^10.0.0",
+    "typescript": "^4.3.2",
+    "uuid": "^8.3.2"
+  }
+}
