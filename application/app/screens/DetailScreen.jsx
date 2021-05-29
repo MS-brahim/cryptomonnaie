@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import { View, Text, StyleSheet, Image, Dimensions , TextInput} from 'react-native';
 import { ListItem } from 'react-native-elements';
 import { LineChart } from 'react-native-chart-kit';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import axios from 'axios'
 import ButtonShared from '../components/shared/ButtonShared';
 import Input from '../components/shared/InputShared';
@@ -25,10 +26,11 @@ class DetailScreen extends Component {
             times:[0],
             price:[0],
             value:'',
+            solde:this.props.route.params.soldeState,
         };
     }
     
-    componentDidMount() {
+    componentDidMount() {     
         this.getCoinByID();
         this.asyncChartData();
     }
@@ -78,19 +80,27 @@ class DetailScreen extends Component {
     }
 
     buyCoinCap(){
-        const {value, dataID} = this.state
-        console.log(50000-dataID.priceUsd);
-        // if (dataID) {
-            
-        // }
-        // console.log(value);
-        axios.post('http://localhost:4000/api/v1/wallet/create',{
-            coin_name:dataID.name,
-            value:value
-        }).then((response)=>{
-            console.log(response.data);
-            // axios.
+        const {value, dataID, solde} = this.state
+        const mount = solde-dataID.priceUsd;
+
+        console.log(mount);
+        AsyncStorage.getItem('UID').then(async(uid)=>{
+            console.log('USER IS', uid);
+            await axios.post('http://localhost:4000/api/v1/wallet/create',{
+                uid:uid,
+                coin_name:dataID.name,
+                value:value
+            }).then(async (response)=>{
+                console.log(response.data);
+                await axios.patch('http://localhost:4000/api/v1/user/update/'+uid,{solde: parseInt(mount)}).then((res) => {
+                    console.log("update solde ", res.data);
+                }).catch((err) => {
+                    console.log(err);
+                });
+
+            })
         })
+        
     }
 
     render() { 
@@ -163,6 +173,7 @@ class DetailScreen extends Component {
                     }}
                 />
                 <TextInput
+                    style={{borderRadius:10, width:100, height:30, alignSelf:'center', borderWidth:1}}
                     value={value}
                     onChangeText={value => this.handleInputChange('value', value)}
                 />

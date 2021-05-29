@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import { TouchableOpacity, ActivityIndicator, FlatList, View,ScrollView,  Text } from 'react-native';
 import { Avatar, ListItem, Header } from 'react-native-elements';
 import axios from 'axios'
+import firebase from '../../Config'
 
 export default class HomeScreen extends Component {
  
@@ -10,18 +11,37 @@ export default class HomeScreen extends Component {
 
         this.state = {
             data: [],
-            isLoading: false
+            isLoading: false,
+            solde:0,
+            email:''
         };
     }
 
     componentDidMount() {
         this.getCoin();
+        this.getUserInfo();
+    }
+
+    async getUserInfo(){
+        try {
+            await firebase.auth().onAuthStateChanged(async (user) => {
+            if (user) {
+                const response = await axios.get('http://localhost:4000/api/v1/user/read/'+user.uid)
+                // console.log(user);
+                this.setState({solde:response.data, email:user})
+                
+            } else {
+                console.log('No user is signed in.');
+            }
+        });
+        } catch (error) {
+            console.log(error);
+        }
     }
 
     async getCoin() {
         try {
         const response = await axios.get('https://api.coincap.io/v2/assets',{params:{limit:10}})
-            // console.log(response.data.data[0]);
             this.setState({data:response.data.data})
         } catch (error) {
             console.error(error);
@@ -29,15 +49,14 @@ export default class HomeScreen extends Component {
         }
     }
     render() {
-        const { data, isLoading } = this.state;
-
+        const { data, isLoading, solde, email } = this.state;
+    // console.log(solde);
         return (
         <ScrollView>
             <Header
-            leftComponent={{ icon: 'menu', color: '#fff' }}
-            centerComponent={{ text: 'Home', style: { color: '#fff' } }}
-            rightComponent={{ icon: 'user', color: '#fff' }}
-            backgroundColor= 'orange'
+                leftComponent={ <Text style={{color:'#fff', fontWeight:'bold'}}> {solde.solde}</Text>}
+                rightComponent={<Text  style={{color:'#fff'}}> {email.email} </Text>}
+                backgroundColor= 'orange'
             />
             <View style={{ flex: 1, backgroundColor:'#fff' }}>
                     {isLoading ? <ActivityIndicator/> : (
@@ -46,7 +65,7 @@ export default class HomeScreen extends Component {
                             keyExtractor={({ id }, index) => id}
                             style={{color:'red'}}
                             renderItem={({ item }) => (
-                                <TouchableOpacity onPress={()=> this.props.navigation.navigate('Detail',{itemID: item.id})} style={{shadowColor: 'black',shadowOffset: {width: 0, height: 1},shadowOpacity: 0.2,elevation: 1}}>
+                                <TouchableOpacity onPress={()=> this.props.navigation.navigate('Detail',{itemID: item.id, soldeState:solde.solde,})} style={{shadowColor: 'black',shadowOffset: {width: 0, height: 1},shadowOpacity: 0.2,elevation: 1}}>
                                 <ListItem>
                                     <Avatar source={{uri: `https://assets.coincap.io/assets/icons/${item.symbol.toLowerCase()}@2x.png `}} />
                                     {/* <Icon name={item.id} size={22}/> */}

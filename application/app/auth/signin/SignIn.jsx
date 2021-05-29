@@ -37,17 +37,14 @@ const SignIn = (props) => {
             } else {
                 firebase.auth().signInWithEmailAndPassword(email, password).then(res=>{
                     const iduser = res.user.uid
-                    console.log(iduser);
-                    // AsyncStorage.setItem('TOKEN', res.user.refreshToken)
+                    // console.log(iduser);
+                    AsyncStorage.setItem('TOKEN', res.user.refreshToken)
+                    AsyncStorage.setItem('UID', iduser)
                     axios.post('http://localhost:4000/api/v1/user/create',{
                         id: res.user.uid
                     }).then((ress)=>{
                         console.log(ress.data);
                     })
-
-                    // axios.get('http://localhost:4000/api/v1/user/read'+iduser).then((ress)=>{
-                    //     console.log('ok', ress.data);
-                    // })
                     props.navigation.navigate('Home')
                 })
             }

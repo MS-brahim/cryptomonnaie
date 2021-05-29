@@ -19,7 +19,7 @@ const styles = StyleSheet.create({
  
 class Splash extends Component {
 
-     componentDidMount(){
+    componentDidMount(){
         AsyncStorage.getItem('TOKEN').then((token ) => {
             if (token) {
                 this.props.navigation.navigate('Home')
