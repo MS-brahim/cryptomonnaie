@@ -2,6 +2,7 @@ import { Request, Response } from 'express';
 
 import { v4 as uuidv4 } from 'uuid';
 import { WalletI } from '../models/Wallet.model';
+import { UserI } from '../models/User.model';
 
 class WalletController {
 	async create(req: Request, res: Response) {

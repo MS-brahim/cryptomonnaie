@@ -1,17 +1,15 @@
 import { Request, Response } from 'express';
 
-import { v4 as uuidv4 } from 'uuid';
 import { UserI } from '../models/User.model';
 
 class UserController {
 	async create(req: Request, res: Response) {
-		const id = uuidv4();
 		try {
-			const record = await UserI.create({ ...req.body, id });
+			const record = await UserI.create({ ...req.body });
 			return res.json({ record, msg: 'Successfully create user' });
 		} catch (e) {
-			// return res.json({ msg: 'fail to create', status: 500, route: '/create' });
-            return res.json(e.message)
+			// return res.json(e.message)
+			return res.json({ msg: 'fail to create', status: 500, route: '/create' });
 		}
 	}
 

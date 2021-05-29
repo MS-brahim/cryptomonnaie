@@ -18,7 +18,7 @@ UserI.init(
 		solde: {
 			type: DataTypes.INTEGER,
 			allowNull: false,
-            defaultValue:10000
+            defaultValue:999999999.00
 		},
 	},
 	{
@@ -26,3 +26,4 @@ UserI.init(
 		tableName: 'users',
 	}
 );
+
