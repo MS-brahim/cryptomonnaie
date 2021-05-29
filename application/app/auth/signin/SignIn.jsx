@@ -6,6 +6,7 @@ import {
     ScrollView,
     Alert,
 } from "react-native";
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 import NavWarinigShared from "../../components/shared/NavWarningShared";
 import SocialButton from "../../components/SocialButtonComponent";
@@ -13,6 +14,7 @@ import Input from "../../components/shared/InputShared";
 import ButtonShared from "../../components/shared/ButtonShared";
 
 import firebase from '../../../Config'
+import axios from "axios";
 
 const styles = StyleSheet.create({
     container: {
@@ -34,7 +36,18 @@ const SignIn = (props) => {
                 Alert('password empty');
             } else {
                 firebase.auth().signInWithEmailAndPassword(email, password).then(res=>{
-                    console.log(res);
+                    const iduser = res.user.uid
+                    console.log(iduser);
+                    // AsyncStorage.setItem('TOKEN', res.user.refreshToken)
+                    axios.post('http://localhost:4000/api/v1/user/create',{
+                        id: res.user.uid
+                    }).then((ress)=>{
+                        console.log(ress.data);
+                    })
+
+                    // axios.get('http://localhost:4000/api/v1/user/read'+iduser).then((ress)=>{
+                    //     console.log('ok', ress.data);
+                    // })
                     props.navigation.navigate('Home')
                 })
             }

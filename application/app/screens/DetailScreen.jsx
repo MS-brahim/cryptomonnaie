@@ -78,14 +78,18 @@ class DetailScreen extends Component {
     }
 
     buyCoinCap(){
-        // console.log('ok');
         const {value, dataID} = this.state
+        console.log(50000-dataID.priceUsd);
+        // if (dataID) {
+            
+        // }
         // console.log(value);
         axios.post('http://localhost:4000/api/v1/wallet/create',{
             coin_name:dataID.name,
             value:value
         }).then((response)=>{
             console.log(response.data);
+            // axios.
         })
     }
 
