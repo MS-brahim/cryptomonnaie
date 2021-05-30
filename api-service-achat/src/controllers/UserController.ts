@@ -33,6 +33,29 @@ class UserController {
 			return res.json({ msg: 'fail to read', status: 500, route: '/read/:id' });
 		}
 	}
+
+	async update(req: Request, res: Response) {
+		try {
+			const { id } = req.params;
+			const record = await UserI.findOne({ where: { id } });
+
+			if (!record) {
+				return res.json({ msg: 'Can not find existing record' });
+			}
+
+			const updatedRecord = await record.update({
+				solde: req.body.solde,
+			});
+			return res.json({ record: updatedRecord });
+		} catch (e) {
+			return res.json(e.message)
+			// return res.json({
+			// 	msg: 'fail to read',
+			// 	status: 500,
+			// 	route: '/update/:id',
+			// });
+		}
+	}
 }
 
 export default new UserController();

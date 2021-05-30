@@ -59,7 +59,7 @@ export default class HomeScreen extends Component {
                 backgroundColor= 'orange'
             />
             <View style={{ flex: 1, backgroundColor:'#fff' }}>
-                    {isLoading ? <ActivityIndicator/> : (
+                    {isLoading ? <ActivityIndicator style={{flex:1}}/> : (
                         <FlatList
                             data={data}
                             keyExtractor={({ id }, index) => id}

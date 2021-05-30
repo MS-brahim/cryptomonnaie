@@ -18,4 +18,9 @@ router.get(
 	UserController.findUserById
 );
 
+router.patch(
+	'/update/:id',
+	UserController.update
+);
+
 export default router;
