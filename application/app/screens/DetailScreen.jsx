@@ -5,7 +5,6 @@ import { LineChart } from 'react-native-chart-kit';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import axios from 'axios'
 import ButtonShared from '../components/shared/ButtonShared';
-import Input from '../components/shared/InputShared';
 
 const styles = StyleSheet.create({
     container: {
@@ -14,7 +13,8 @@ const styles = StyleSheet.create({
         padding:10
     }
 });
- 
+const urlApi = 'http://localhost:4000/api/v1/';
+
 class DetailScreen extends Component {
     
     constructor(props) {
@@ -30,7 +30,7 @@ class DetailScreen extends Component {
         };
     }
     
-    componentDidMount() {     
+    componentDidMount() {   
         this.getCoinByID();
         this.asyncChartData();
     }
@@ -81,19 +81,33 @@ class DetailScreen extends Component {
 
     buyCoinCap(){
         const {value, dataID, solde} = this.state
-        const mount = solde-dataID.priceUsd;
+        const amount = solde-dataID.priceUsd;
 
-        console.log(mount);
+        console.log(dataID.priceUsd*value);
+
+        if (solde < dataID.priceUsd*value) {
+            return false;
+        }
+
         AsyncStorage.getItem('UID').then(async(uid)=>{
             console.log('USER IS', uid);
-            await axios.post('http://localhost:4000/api/v1/wallet/create',{
+            await axios.post(urlApi+'wallet/create',{
                 uid:uid,
                 coin_name:dataID.name,
-                value:value
+                value:dataID.priceUsd*value
             }).then(async (response)=>{
                 console.log(response.data);
-                await axios.patch('http://localhost:4000/api/v1/user/update/'+uid,{solde: parseInt(mount)}).then((res) => {
+                await axios.patch(urlApi+'user/update/'+uid,{solde: parseInt(amount)}).then( async(res) => {
                     console.log("update solde ", res.data);
+                    const sendMail = await axios.post(urlApi+'wallet/send-mail',{
+                        subject: `Buy New CoinCap(${dataID.name})`,
+                        to: this.props.route.params.email,
+                        text: `Congratulations, you have successfully buy new ${dataID.name}`,
+                        value: dataID.priceUsd*value,
+                        price: dataID.priceUsd,
+                        name: dataID.name
+                    })
+                    console.log(sendMail);
                 }).catch((err) => {
                     console.log(err);
                 });

@@ -65,7 +65,7 @@ export default class HomeScreen extends Component {
                             keyExtractor={({ id }, index) => id}
                             style={{color:'red'}}
                             renderItem={({ item }) => (
-                                <TouchableOpacity onPress={()=> this.props.navigation.navigate('Detail',{itemID: item.id, soldeState:solde.solde,})} style={{shadowColor: 'black',shadowOffset: {width: 0, height: 1},shadowOpacity: 0.2,elevation: 1}}>
+                                <TouchableOpacity onPress={()=> this.props.navigation.navigate('Detail',{itemID: item.id, soldeState:solde.solde, email:email.email})} style={{shadowColor: 'black',shadowOffset: {width: 0, height: 1},shadowOpacity: 0.2,elevation: 1}}>
                                 <ListItem>
                                     <Avatar source={{uri: `https://assets.coincap.io/assets/icons/${item.symbol.toLowerCase()}@2x.png `}} />
                                     {/* <Icon name={item.id} size={22}/> */}
