@@ -16,7 +16,7 @@ import ButtonShared from "../../components/shared/ButtonShared";
 
 import firebase from '../../../Config'
 import axios from "axios";
-import { Avatar } from "react-native-elements";
+const apiUrl = 'http://localhost:4000/api/v1/'
 
 const styles = StyleSheet.create({
     container: {
@@ -42,7 +42,7 @@ const SignIn = (props) => {
                     // console.log(iduser);
                     AsyncStorage.setItem('TOKEN', res.user.refreshToken)
                     AsyncStorage.setItem('UID', iduser)
-                    axios.post('http://localhost:4000/api/v1/user/create',{
+                    axios.post(apiUrl+'user/create',{
                         id: res.user.uid
                     }).then((ress)=>{
                         console.log(ress.data);

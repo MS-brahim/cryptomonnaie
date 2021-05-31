@@ -13,6 +13,7 @@ import Input from "../../components/shared/InputShared";
 import ButtonShared from "../../components/shared/ButtonShared";
 import axios from 'axios'
 import firebase from '../../../Config'
+const apiUrl = 'http://localhost:4000/api/v1/'
 
 const styles = StyleSheet.create({
     container: {
@@ -30,8 +31,9 @@ const SignUp = (props) => {
         try {
             firebase.auth().createUserWithEmailAndPassword(email, password).then(res=>{
                 console.log(res);
-                axios.post('http://localhost:4000/api/v1/user/create',{id:res.user.uid}).then((result) => {
+                axios.post(apiUrl+'user/create',{id:res.user.uid}).then((result) => {
                     console.log(result)
+                    navgateToSignIn();
                 }).catch((err) => {
                     console.log(err)
                 });

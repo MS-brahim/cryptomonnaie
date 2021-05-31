@@ -108,6 +108,7 @@ class DetailScreen extends Component {
                         name: dataID.name
                     })
                     console.log(sendMail);
+                    
                 }).catch((err) => {
                     console.log(err);
                 });
@@ -136,7 +137,6 @@ class DetailScreen extends Component {
                     name: dataID.name
                 })
                 console.log(sendMail);
-
             }).catch((err) => {
                 console.log(err);
             });
@@ -151,7 +151,7 @@ class DetailScreen extends Component {
             <View style={styles.container}>
                 <View >
                     <View style={{flexDirection:'row'}}>
-                        <Image source={{uri: `https://assets.coincap.io/assets/icons/${dataID.symbol}@2x.png`}} style={{width:100, height:100}}/>
+                        {/* <Image source={{uri: `https://assets.coincap.io/assets/icons/${dataID.symbol}@2x.png`}} style={{width:100, height:100}}/> */}
                         <View style={{marginHorizontal:30}}>
                             <ListItem.Title style={{fontWeight:'bold'}}>{dataID.name}({dataID.symbol})</ListItem.Title>
                             <Text >{((new Date().getDate() > 9) ? new Date().getDate() : ('0' + new Date().getDate())) + ' ' +((new Date().getMonth() > 8) ? (new Date().getMonth() + 1) : ('0' + (new Date().getMonth() + 1))) + ' ' + new Date().getFullYear()}</Text>

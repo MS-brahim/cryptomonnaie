@@ -3,6 +3,7 @@ import { TouchableOpacity, ActivityIndicator, FlatList, View,ScrollView,  Text }
 import { Avatar, ListItem, Header } from 'react-native-elements';
 import axios from 'axios'
 import firebase from '../../Config'
+const apiUrl = 'http://localhost:4000/api/v1/'
 
 export default class HomeScreen extends Component {
  
@@ -26,7 +27,7 @@ export default class HomeScreen extends Component {
         try {
             await firebase.auth().onAuthStateChanged(async (user) => {
             if (user) {
-                const response = await axios.get('http://localhost:4000/api/v1/user/read/'+user.uid)
+                const response = await axios.get(apiUrl+'user/read/'+user.uid)
                 // console.log(user);
                 this.setState({solde:response.data, email:user})
                 
