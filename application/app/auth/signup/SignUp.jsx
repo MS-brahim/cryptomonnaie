@@ -4,15 +4,15 @@ import {
     Text,
     StyleSheet,
     ScrollView,
+    Image
 } from "react-native";
 
 import NavWarinigShared from "../../components/shared/NavWarningShared";
 import SocialButton from "../../components/SocialButtonComponent";
 import Input from "../../components/shared/InputShared";
 import ButtonShared from "../../components/shared/ButtonShared";
-
+import axios from 'axios'
 import firebase from '../../../Config'
-const db  = firebase.firestore();
 
 const styles = StyleSheet.create({
     container: {
@@ -25,21 +25,17 @@ const SignUp = (props) => {
 
     const [email, setEmail] = React.useState("")
     const [password, setPassword] = React.useState("")
-    const [full_name, setFullName] = React.useState("")
 
     function onLoginPressed  () {
         try {
             firebase.auth().createUserWithEmailAndPassword(email, password).then(res=>{
                 console.log(res);
-                // props.navigation.navigate('Home')
-                if (db) {
-                    db.collection("users")
-                      .add({
-                        full_name: full_name,
-                        email: email,
-                        password: password,
-                    })
-                }
+                axios.post('http://localhost:4000/api/v1/user/create',{id:res.user.uid}).then((result) => {
+                    console.log(result)
+                }).catch((err) => {
+                    console.log(err)
+                });
+
             })
         } catch (err) {
             console.log(err.message);
@@ -52,13 +48,11 @@ const SignUp = (props) => {
 
     return (
         <View style={styles.container}>
-            <NavWarinigShared/>
+            <NavWarinigShared text='Sign up'/>
+            <View style={{ alignItems:'center', marginTop:-40}}>
+                <Image source={require(`../../../assets/signup.png`)} style={{width:200, height:200, zIndex:1}} />
+            </View>
             <ScrollView style={{margin:30, zIndex:1}}>
-                <Input
-                    placeholder='Full name'
-                    secureTextEntry={false}
-                    onChangeText={setFullName}
-                />
                 <Input
                     placeholder='E-mail...'
                     secureTextEntry={false}

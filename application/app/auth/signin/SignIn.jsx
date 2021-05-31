@@ -5,6 +5,7 @@ import {
     StyleSheet,
     ScrollView,
     Alert,
+    Image
 } from "react-native";
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
@@ -15,6 +16,7 @@ import ButtonShared from "../../components/shared/ButtonShared";
 
 import firebase from '../../../Config'
 import axios from "axios";
+import { Avatar } from "react-native-elements";
 
 const styles = StyleSheet.create({
     container: {
@@ -59,7 +61,10 @@ const SignIn = (props) => {
 
     return (
         <View style={styles.container}>
-            <NavWarinigShared/>
+            <NavWarinigShared text='Sign in'/>
+            <View style={{ alignItems:'center', marginTop:-40}}>
+                <Image source={require(`../../../assets/signin.png`)} style={{width:200, height:200, zIndex:1}} />
+            </View>
             <ScrollView style={{margin:30, zIndex:1}}>
                 <Input
                     placeholder='E-mail...'
