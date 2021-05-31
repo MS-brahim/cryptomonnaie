@@ -117,6 +117,32 @@ class DetailScreen extends Component {
         
     }
 
+    sellCoinCap(){
+        const { value, dataID, solde } = this.state;
+        const totalSolde = value*dataID.priceUsd + solde;
+        console.log('ok', totalSolde);
+
+        AsyncStorage.getItem('UID').then(async(uid)=>{
+            console.log('USER IS', uid);
+            await axios.patch(urlApi+'user/update/'+uid,{solde: parseInt(totalSolde)}).then( async(res) => {
+                console.log("update solde ", res.data);
+
+                const sendMail = await axios.post(urlApi+'wallet/send-mail',{
+                    subject: `Sell CoinCap(${dataID.name})`,
+                    to: this.props.route.params.email,
+                    text: `Sell ${dataID.name} Successfully`,
+                    value: dataID.priceUsd*value,
+                    price: dataID.priceUsd,
+                    name: dataID.name
+                })
+                console.log(sendMail);
+
+            }).catch((err) => {
+                console.log(err);
+            });
+        })
+    }
+
     render() { 
 
         const {dataID, times, price, value} = this.state
@@ -186,12 +212,22 @@ class DetailScreen extends Component {
                         marginRight:20,
                     }}
                 />
-                <TextInput
-                    style={{borderRadius:10, width:100, height:30, alignSelf:'center', borderWidth:1}}
-                    value={value}
-                    onChangeText={value => this.handleInputChange('value', value)}
-                />
-                <ButtonShared text='Buy now' onPress={()=> this.buyCoinCap()}/>
+                <View style={{alignItems:'center'}}>
+                    <TextInput
+                        style={{borderRadius:10, width:100, height:30, borderWidth:1}}
+                        // value={value}
+                        onChangeText={value => this.handleInputChange('value', value)}
+                    />
+                    <ButtonShared text='Buy now' onPress={()=> this.buyCoinCap()}/>
+                    <Text style={{marginVertical:10, fontSize:16}}>if have an coin sell now</Text>
+                    <TextInput
+                        style={{borderRadius:10, width:100, height:30, borderWidth:1}}
+                        // value={value}
+                        onChangeText={value => this.handleInputChange('value', value)}
+                    />
+                    <ButtonShared text='Sell' onPress={()=> this.sellCoinCap()}/>
+                </View>
+
             </View>
         );
     }
