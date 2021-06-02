@@ -13,7 +13,7 @@ import Input from "../../components/shared/InputShared";
 import ButtonShared from "../../components/shared/ButtonShared";
 import axios from 'axios'
 import firebase from '../../../Config'
-const apiUrl = 'http://localhost:4000/api/v1/'
+const apiUrl = 'https://cryptoccapi.herokuapp.com/api/v1/'
 
 const styles = StyleSheet.create({
     container: {
@@ -49,12 +49,12 @@ const SignUp = (props) => {
     }
 
     return (
-        <View style={styles.container}>
+        <ScrollView style={styles.container}>
             <NavWarinigShared text='Sign up'/>
             <View style={{ alignItems:'center', marginTop:-40}}>
                 <Image source={require(`../../../assets/signup.png`)} style={{width:200, height:200, zIndex:1}} />
             </View>
-            <ScrollView style={{margin:30, zIndex:1}}>
+            <View style={{margin:30, zIndex:1}}>
                 <Input
                     placeholder='E-mail...'
                     secureTextEntry={false}
@@ -65,7 +65,9 @@ const SignUp = (props) => {
                     secureTextEntry={true}
                     onChangeText={setPassword}
                 />
-                <ButtonShared text='Connection' onPress={()=>{onLoginPressed()}}/>
+                <View style={{alignItems:'center'}}>
+                    <ButtonShared text='Inscrire' onPress={()=>{onLoginPressed()}}/>
+                </View>
                 <Text style={{color:'orange',alignSelf:'center', marginVertical:15, fontSize:16}}>Or Sign up with</Text>
                 <View style={{flexDirection:'row', justifyContent:'center'}}>
                     <SocialButton 
@@ -92,8 +94,8 @@ const SignUp = (props) => {
                             onPress={()=>navgateToSignIn()}
                         >Sign in </Text>
                     </View>
-            </ScrollView>
-        </View>
+            </View>
+        </ScrollView>
     );
 }
 

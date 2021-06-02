@@ -3,7 +3,9 @@ import { TouchableOpacity, ActivityIndicator, FlatList, View,ScrollView,  Text }
 import { Avatar, ListItem, Header } from 'react-native-elements';
 import axios from 'axios'
 import firebase from '../../Config'
-const apiUrl = 'http://localhost:4000/api/v1/'
+import Icon from 'react-native-vector-icons/FontAwesome';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+const apiUrl = 'https://cryptoccapi.herokuapp.com/api/v1/'
 
 export default class HomeScreen extends Component {
  
@@ -49,14 +51,22 @@ export default class HomeScreen extends Component {
             this.setState({isLoading:true})
         }
     }
+
+    async logOutUser(){
+        AsyncStorage.clear().then(()=>{
+            this.props.navigation.navigate('signIn')
+        })
+    }
+
     render() {
         const { data, isLoading, solde, email } = this.state;
     // console.log(solde);
         return (
         <ScrollView>
             <Header
-                leftComponent={ <Text style={{color:'#fff', fontWeight:'bold'}}> {solde.solde}</Text>}
-                rightComponent={<Text  style={{color:'#fff'}}> {email.email} </Text>}
+                leftComponent={ <Text style={{color:'#fff', fontWeight:'bold', width:180}}> {solde.solde}$</Text>}
+                centerComponent= {<Text  style={{color:'#fff'}}> {email.email} </Text>}
+                rightComponent={<Icon name='sign-out' size={20} color='#fff' style={{width:20}} onPress={()=>this.logOutUser()}></Icon>}
                 backgroundColor= 'orange'
             />
             <View style={{ flex: 1, backgroundColor:'#fff' }}>

@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { View, Text, StyleSheet, Image, Dimensions , TextInput} from 'react-native';
+import { View, Text, StyleSheet, ScrollView, Dimensions , TextInput} from 'react-native';
 import { ListItem } from 'react-native-elements';
 import { LineChart } from 'react-native-chart-kit';
 import AsyncStorage from '@react-native-async-storage/async-storage';
@@ -13,7 +13,7 @@ const styles = StyleSheet.create({
         padding:10
     }
 });
-const urlApi = 'http://localhost:4000/api/v1/';
+const urlApi = 'https://cryptoccapi.herokuapp.com/api/v1/';
 
 class DetailScreen extends Component {
     
@@ -146,9 +146,9 @@ class DetailScreen extends Component {
     render() { 
 
         const {dataID, times, price, value} = this.state
-
+        
         return (
-            <View style={styles.container}>
+            <ScrollView style={styles.container}>
                 <View >
                     <View style={{flexDirection:'row'}}>
                         {/* <Image source={{uri: `https://assets.coincap.io/assets/icons/${dataID.symbol}@2x.png`}} style={{width:100, height:100}}/> */}
@@ -160,15 +160,15 @@ class DetailScreen extends Component {
                     <View style={{flexDirection:'row', justifyContent:'space-between', marginTop:20}}>
                         <View >
                             <ListItem.Subtitle>
-                                HIGH <ListItem.Title> ${ Number.parseFloat(dataID.priceUsd).toFixed(2).toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")}</ListItem.Title>
+                                HIGH <ListItem.Title> ${ parseFloat(price[0]).toFixed(2)}</ListItem.Title>
                             </ListItem.Subtitle> 
                             <ListItem.Subtitle style={{marginVertical:20}}>
-                                LOW <ListItem.Title> ${ Number.parseFloat(dataID.priceUsd).toFixed(2).toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")}</ListItem.Title>
+                                LOW <ListItem.Title> ${ parseFloat(price[5]).toFixed(2)}</ListItem.Title>
                             </ListItem.Subtitle>                     
                         </View>
                         <View>
                             <ListItem.Subtitle>
-                                AVERAGE <ListItem.Title> ${ Number.parseFloat(dataID.priceUsd).toFixed(2).toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")}</ListItem.Title>
+                                AVERAGE <ListItem.Title> ${ Number.parseFloat(dataID.vwap24Hr).toFixed(2).toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")}</ListItem.Title>
                             </ListItem.Subtitle> 
                             <ListItem.Subtitle style={{marginVertical:20}}>
                                 CHANGE <ListItem.Title> 
@@ -212,7 +212,7 @@ class DetailScreen extends Component {
                         marginRight:20,
                     }}
                 />
-                <View style={{alignItems:'center'}}>
+                <View style={{alignItems:'center', marginBottom:30}}>
                     <TextInput
                         style={{borderRadius:10, width:100, height:30, borderWidth:1}}
                         // value={value}
@@ -228,7 +228,7 @@ class DetailScreen extends Component {
                     <ButtonShared text='Sell' onPress={()=> this.sellCoinCap()}/>
                 </View>
 
-            </View>
+            </ScrollView>
         );
     }
 }
