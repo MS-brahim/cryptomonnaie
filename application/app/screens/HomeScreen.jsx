@@ -60,18 +60,19 @@ export default class HomeScreen extends Component {
 
     render() {
         const { data, isLoading, solde, email } = this.state;
-    // console.log(solde);
+
         return (
         <ScrollView>
             <Header
-                leftComponent={ <Text style={{color:'#fff', fontWeight:'bold', width:180}}> {solde.solde}$</Text>}
-                centerComponent= {<Text  style={{color:'#fff'}}> {email.email} </Text>}
-                rightComponent={<Icon name='sign-out' size={20} color='#fff' style={{width:20}} onPress={()=>this.logOutUser()}></Icon>}
+                leftComponent= {<Text  style={{color:'#fff', width:220}}> {email.email} </Text>}
+                rightComponent={<Text style={{color:'#fff', width:80}} onPress={()=>this.logOutUser()} >Logout <Icon name='sign-out' size={18} color='#fff'></Icon></Text>}
                 backgroundColor= 'orange'
             />
             <View style={{ flex: 1, backgroundColor:'#fff' }}>
                     {isLoading ? <ActivityIndicator style={{flex:1}}/> : (
                         <FlatList
+                            // refreshing={isLoading}
+                            // onRefresh={this.getCoin()}
                             data={data}
                             keyExtractor={({ id }, index) => id}
                             style={{color:'red'}}
@@ -100,7 +101,7 @@ export default class HomeScreen extends Component {
                             )}
                         />
                     )}
-                </View>
+            </View>
         </ScrollView>
         );
     }

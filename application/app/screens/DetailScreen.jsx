@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { View, Text, StyleSheet, ScrollView, Dimensions , TextInput} from 'react-native';
+import { View, Text, StyleSheet, ScrollView, Dimensions , TextInput, ActivityIndicator, Alert} from 'react-native';
 import { ListItem } from 'react-native-elements';
 import { LineChart } from 'react-native-chart-kit';
 import AsyncStorage from '@react-native-async-storage/async-storage';
@@ -11,6 +11,16 @@ const styles = StyleSheet.create({
         flex: 1,
         backgroundColor:'#fff',
         padding:10
+    },
+    inputBuySell : {
+        borderRadius:10, 
+        width:100, 
+        height:30, 
+        borderWidth:1, 
+        padding:5,
+        alignItems:'center',
+        borderWidth:1,
+        borderColor:'orange'
     }
 });
 const urlApi = 'https://cryptoccapi.herokuapp.com/api/v1/';
@@ -83,22 +93,22 @@ class DetailScreen extends Component {
         const {value, dataID, solde} = this.state
         const amount = solde-dataID.priceUsd;
 
-        console.log(dataID.priceUsd*value);
+        // console.log(dataID.priceUsd*value);
 
         if (solde < dataID.priceUsd*value) {
             return false;
         }
 
         AsyncStorage.getItem('UID').then(async(uid)=>{
-            console.log('USER IS', uid);
+            // console.log('USER IS', uid);
             await axios.post(urlApi+'wallet/create',{
                 uid:uid,
                 coin_name:dataID.name,
                 value:dataID.priceUsd*value
             }).then(async (response)=>{
-                console.log(response.data);
+                // console.log(response.data);
                 await axios.patch(urlApi+'user/update/'+uid,{solde: parseInt(amount)}).then( async(res) => {
-                    console.log("update solde ", res.data);
+                    // console.log("update solde ", res.data);
                     const sendMail = await axios.post(urlApi+'wallet/send-mail',{
                         subject: `Buy New CoinCap(${dataID.name})`,
                         to: this.props.route.params.email,
@@ -107,8 +117,9 @@ class DetailScreen extends Component {
                         price: dataID.priceUsd,
                         name: dataID.name
                     })
-                    console.log(sendMail);
-                    
+                    // console.log(sendMail);
+                    this.setState({solde:parseInt(amount)})
+                    Alert.alert(`Buy ${dataID.name} success, Solde: ${this.state.solde} USD`)
                 }).catch((err) => {
                     console.log(err);
                 });
@@ -121,12 +132,12 @@ class DetailScreen extends Component {
     sellCoinCap(){
         const { value, dataID, solde } = this.state;
         const totalSolde = value*dataID.priceUsd + solde;
-        console.log('ok', totalSolde);
+        // console.log('ok', totalSolde);
 
         AsyncStorage.getItem('UID').then(async(uid)=>{
-            console.log('USER IS', uid);
+            // console.log('USER IS', uid);
             await axios.patch(urlApi+'user/update/'+uid,{solde: parseInt(totalSolde)}).then( async(res) => {
-                console.log("update solde ", res.data);
+                // console.log("update solde ", res.data);
 
                 const sendMail = await axios.post(urlApi+'wallet/send-mail',{
                     subject: `Sell CoinCap(${dataID.name})`,
@@ -136,7 +147,9 @@ class DetailScreen extends Component {
                     price: dataID.priceUsd,
                     name: dataID.name
                 })
-                console.log(sendMail);
+                // console.log(sendMail);
+                this.setState({solde:parseInt(totalSolde)})
+                Alert.alert(`Sell ${dataID.name} success, Solde: ${this.state.solde} USD`)
             }).catch((err) => {
                 console.log(err);
             });
@@ -145,17 +158,17 @@ class DetailScreen extends Component {
 
     render() { 
 
-        const {dataID, times, price, value} = this.state
-        
+        const {dataID, times, price, value, solde} = this.state
         return (
             <ScrollView style={styles.container}>
                 <View >
-                    <View style={{flexDirection:'row'}}>
+                    <View style={{flexDirection:'row', justifyContent:'space-between',}}>
                         {/* <Image source={{uri: `https://assets.coincap.io/assets/icons/${dataID.symbol}@2x.png`}} style={{width:100, height:100}}/> */}
                         <View style={{marginHorizontal:30}}>
                             <ListItem.Title style={{fontWeight:'bold'}}>{dataID.name}({dataID.symbol})</ListItem.Title>
                             <Text >{((new Date().getDate() > 9) ? new Date().getDate() : ('0' + new Date().getDate())) + ' ' +((new Date().getMonth() > 8) ? (new Date().getMonth() + 1) : ('0' + (new Date().getMonth() + 1))) + ' ' + new Date().getFullYear()}</Text>
                         </View>
+                        <Text style={{fontSize:14, backgroundColor:'orange', padding:10, borderRadius:20, color:'#fff'}}>{solde} USD</Text>
                     </View>
                     <View style={{flexDirection:'row', justifyContent:'space-between', marginTop:20}}>
                         <View >
@@ -214,15 +227,15 @@ class DetailScreen extends Component {
                 />
                 <View style={{alignItems:'center', marginBottom:30}}>
                     <TextInput
-                        style={{borderRadius:10, width:100, height:30, borderWidth:1}}
-                        // value={value}
+                        style={styles.inputBuySell}
+                        keyboardType="numeric"
                         onChangeText={value => this.handleInputChange('value', value)}
                     />
                     <ButtonShared text='Buy now' onPress={()=> this.buyCoinCap()}/>
                     <Text style={{marginVertical:10, fontSize:16}}>if have an coin sell now</Text>
                     <TextInput
-                        style={{borderRadius:10, width:100, height:30, borderWidth:1}}
-                        // value={value}
+                        style={styles.inputBuySell}
+                        keyboardType="numeric"
                         onChangeText={value => this.handleInputChange('value', value)}
                     />
                     <ButtonShared text='Sell' onPress={()=> this.sellCoinCap()}/>

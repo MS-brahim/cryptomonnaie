@@ -13,7 +13,7 @@ app.use('/api/v1/wallet', walletRouter)
 const port = process.env.PORT || 4000
 
 app.listen( port,()=>{
-    console.log('app is runing in port 4000');
+    console.log('App is runing in port : '+port);
     db.sync().then(() => {
         console.log('db success');
     }).catch((err:any)=>{

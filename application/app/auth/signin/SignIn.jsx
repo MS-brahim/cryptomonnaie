@@ -33,9 +33,9 @@ const SignIn = (props) => {
     function onLoginPressed  () {
         try {
             if (email=='') {
-                Alert('email empty');
+                Alert.alert('Address e-mail is required');
             } else if(password==''){
-                Alert('password empty');
+                Alert.alert('password is required');
             } else {
                 firebase.auth().signInWithEmailAndPassword(email, password).then(res=>{
                     const iduser = res.user.uid
